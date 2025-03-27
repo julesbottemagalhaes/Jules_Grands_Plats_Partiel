@@ -1,14 +1,11 @@
 try {
-    const response = await fetch("recipes.json");
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    const response = await fetch("./assets/json/recipes.json");
     const data = await response.json();
     displayRecipes(data);
+    populateIngredientFilter(data);
 } catch (error) {
-    console.error("Failed to fetch recipes:", error);
+    console.error("Error", error);
 }
-// Je n'arrive pas a load le .json même en le changeant de place et en changeant le path
 function displayRecipes(d) {
     const main = document.querySelector("#recipes-list .row");
     main.innerHTML = '';
@@ -29,9 +26,19 @@ function displayRecipes(d) {
         <div class="row">
           <ul class="card-text col-6 list-unstyled card-ingredients-list">
             ${recipe.ingredients.map(ingredient => `
-              <li class="card-ingredients-list-item">
-                <span class="card-ingredients-list-item-ingredient">${ingredient.name}</span>
+              <li class="card-ingredients-list-item" xmlns="">
+                <span class="card-ingredients-list-item-ingredient">${ingredient.ingredient}</span>
+                <script>
+                if (!${ingredient.quantity}) {
+                    article.innerHTML = '';
+                }
+               </script>
                 <span class="card-ingredients-list-item-quantity">${ingredient.quantity}</span>
+                <script>
+                if (!${ingredient.unit}) {
+                    article.innerHTML = '';
+                }
+               </script>
                 <span class="card-ingredients-list-item-unit">${ingredient.unit}</span>
               </li>
             `).join('')}
@@ -44,8 +51,24 @@ function displayRecipes(d) {
         main.appendChild(article);
     });
 }
+function ingredientFilter(recipes) {
+    const ingredientSet = new Set();
+    recipes.forEach(recipe => {
+        recipe.ingredients.forEach(ingredient => {
+            ingredientSet.add(ingredient.ingredient);
+        });
+    });
+    const ingredientFilter = document.getElementById('ingredients-list');
+    ingredientFilter.innerHTML = '';
+    ingredientSet.forEach(ingredient => {
+        const option = document.createElement('option');
+        option.value = ingredient;
+        option.textContent = ingredient;
+        ingredientFilter.appendChild(option);
+    });
+}
 const searchRecipes= query => {
-const searchJson = `recipes.json?query=${encodeURIComponent(query)}`;
+const searchJson = `./assets/json/recipes.json?query=${encodeURIComponent(query)}`;
 fetch(searchJson)
     .then(response => {
         if (!response.ok) {
@@ -55,6 +78,7 @@ fetch(searchJson)
     })
     .then(data => {
         displayRecipes(data);
+        ingredientFilter(data);
     })
     .catch(error => {
         console.error("Error", error);
