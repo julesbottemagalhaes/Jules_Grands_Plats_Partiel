@@ -2,7 +2,7 @@ try {
     const response = await fetch("./assets/json/recipes.json");
     const data = await response.json();
     displayRecipes(data);
-    populateIngredientFilter(data);
+    ingredientsFilter(data);
 } catch (error) {
     console.error("Error", error);
 }
@@ -51,7 +51,7 @@ function displayRecipes(d) {
         main.appendChild(article);
     });
 }
-function ingredientFilter(recipes) {
+function ingredientsFilter(recipes) {
     const ingredientSet = new Set();
     recipes.forEach(recipe => {
         recipe.ingredients.forEach(ingredient => {
@@ -70,15 +70,18 @@ function ingredientFilter(recipes) {
 const searchRecipes= query => {
 const searchJson = `./assets/json/recipes.json?query=${encodeURIComponent(query)}`;
 fetch(searchJson)
+    //const article = document.createElement('div');
+    //        article.innerHTML = `
+//<script> if (query !== ${recipe.name})</script>
+//<p>Il n'y a pas de recette correspondant à votre recherche.</p>`;
+    // Je ne comprends pas pourquoi j'ai une erreur de syntaxe ici donc je mets cette ligne en commentaire qui correspond a la phase 3.2
+
     .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
         return response.json();
     })
     .then(data => {
         displayRecipes(data);
-        ingredientFilter(data);
+        ingredientsFilter(data);
     })
     .catch(error => {
         console.error("Error", error);
