@@ -14,6 +14,7 @@ function displayRecipes(d) {
         article.className = 'col';
         article.id = index + 1;
         article.innerHTML = `
+    <div class="col" id="${recipe.id + 1}">
     <div class="card h-100">
       <div class="card-img-top"></div>
       <div class="card-body">
@@ -26,26 +27,17 @@ function displayRecipes(d) {
         <div class="row">
           <ul class="card-text col-6 list-unstyled card-ingredients-list">
             ${recipe.ingredients.map(ingredient => `
-              <li class="card-ingredients-list-item" xmlns="">
+                      <li class="card-ingredients-list-item">
                 <span class="card-ingredients-list-item-ingredient">${ingredient.ingredient}</span>
-                <script>
-                if (!${ingredient.quantity}) {
-                    article.innerHTML = '';
-                }
-               </script>
-                <span class="card-ingredients-list-item-quantity">${ingredient.quantity}</span>
-                <script>
-                if (!${ingredient.unit}) {
-                    article.innerHTML = '';
-                }
-               </script>
-                <span class="card-ingredients-list-item-unit">${ingredient.unit}</span>
+                        <span class="card-ingredients-list-item-quantity">${ingredient.quantity || ''}</span>
+                        <span class="card-ingredients-list-item-unit">${ingredient.unit || ''}</span>
               </li>
             `).join('')}
           </ul>
           <p class="card-text col-6 card-description">${recipe.description}</p>
         </div>
       </div>
+    </div>
     </div>
   `;
         main.appendChild(article);
