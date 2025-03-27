@@ -44,3 +44,35 @@ function displayRecipes(d) {
         main.appendChild(article);
     });
 }
+const searchRecipes= query => {
+const searchJson = `recipes.json?query=${encodeURIComponent(query)}`;
+fetch(searchJson)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        displayRecipes(data);
+    })
+    .catch(error => {
+        console.error("Error", error);
+    });
+}
+
+
+const searchInput = document.getElementById('search');
+if (searchInput) {
+    searchInput.addEventListener('input', function() {
+    const query = this.value;
+    if (query.length >= 3) {
+        searchRecipes(query);
+    } else {
+        document.getElementById('results').style.display = 'none';
+    }
+    if (!query) {
+        document.getElementById('results').style.display = 'none';
+    }
+});
+}
