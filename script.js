@@ -51,6 +51,15 @@ function displayRecipes(d) {
         main.appendChild(article);
     });
 }
+
+function addTagAndFilter(ingredient) {
+    const tagContainer = document.getElementById('dropdownIngredients');
+    const tag = document.createElement('span');
+    tag.className = 'ingredient-tag';
+    tag.textContent = ingredient;
+    tagContainer.appendChild(tag);
+}
+
 function ingredientsFilter(recipes) {
     const ingredientSet = new Set();
     recipes.forEach(recipe => {
@@ -64,6 +73,7 @@ function ingredientsFilter(recipes) {
         const option = document.createElement('option');
         option.value = ingredient;
         option.textContent = ingredient;
+        option.addEventListener('click', () => addTagAndFilter(ingredient));
         ingredientFilter.appendChild(option);
     });
 }
